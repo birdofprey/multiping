@@ -5,8 +5,8 @@ read -r -p "Are You Begin? [Y/n] " input
 case $input in
     [yY][eE][sS]|[yY])
 		echo "Yes"
-####                FSTAB=/etc/fstab
-####                SYSCTL=/etc/sysctl.conf
+                FSTAB=/etc/fstab
+                SYSCTL=/etc/sysctl.conf
                 if [ -f ${SYSCTL} ]; then
                     sed -i '$a\tmpfs        \/tmp        tmpfs        defaults     0 0' ${FSTAB}
                 else
