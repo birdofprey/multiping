@@ -1,0 +1,49 @@
+#!/bin/bash
+##################Gnu/Linux Kernel /tmp filesystem optimized####################
+read -r -p "Are You Begin? [Y/n] " input
+
+case $input in
+    [yY][eE][sS]|[yY])
+		echo "Yes"
+####                FSTAB=/etc/fstab
+####                SYSCTL=/etc/sysctl.conf
+                if [ -f ${SYSCTL} ]; then
+                    sed -i '$a\tmpfs        \/tmp        tmpfs        defaults     0 0' ${FSTAB}
+                else
+                    echo "The '${FSTAB}' file is not find"
+                fi
+                if [[ $((uname -r) | (awk -F- '{print $1}')) > 4.9 ]]; then
+                    echo "The Kernel bigger 4.9"
+                    sed -i '$a\net.core.default_qdisc = fq' ${SYSCTL}
+                    sed -i '$a\net.ipv4.tcp_congestion_control = bbr' ${SYSCTL}
+                else
+                    echo "The Kernel less 4.9"
+                fi
+                sed -i '$a\net.ipv4.tcp_fin_timeout = 30' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_syn_retries = 2' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_keepalive_time = 1200' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_orphan_retries = 3' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_syncookies = 1' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_tw_reuse = 1' ${SYSCTL}
+                sed -i '$a\net.ipv4.ip_local_port_range = 1024 65000' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_max_syn_backlog = 8192' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_max_tw_buckets = 5000' ${SYSCTL}
+                sed -i '$a\net.ipv4.tcp_keepalive_probes = 5' ${SYSCTL}
+                sed -i '$a\net.core.netdev_max_backlog = 3000' ${SYSCTL}
+                sed -i '$a\vm.dirty_background_ratio = 5' ${SYSCTL}
+                sed -i '$a\vm.dirty_ratio = 10' ${SYSCTL}
+                sed -i '$a\vm.swappiness = 0' ${SYSCTL}
+                sed -i '$a\vm.vfs_cache_pressure = 62' ${SYSCTL}
+                echo "The Optimized end..."
+                exit 0
+		;;
+
+    [nN][oO]|[nN])
+		echo "No"
+       	;;
+
+    *)
+		echo "Invalid input..."
+		exit 1
+		;;
+esac
