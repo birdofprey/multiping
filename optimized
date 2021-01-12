@@ -12,7 +12,9 @@ case $input in
                 else
                     echo "The '${FSTAB}' file is not find"
                 fi
-                if [[ $((uname -r) | (awk -F- '{print $1}')) > 4.9 ]]; then
+        ####    if [[ $((uname -r) | (awk -F- '{print $1}')) > 4.9 ]]; then
+        ####    if [[ $((uname -r)| (cut -b 1-6)) > 4.9 ]]; then
+                if [[ $(uname -r) > 4.9 ]]; then
                     echo "The Kernel bigger 4.9"
                     sed -i '$a\net.core.default_qdisc = fq' ${SYSCTL}
                     sed -i '$a\net.ipv4.tcp_congestion_control = bbr' ${SYSCTL}
